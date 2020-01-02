@@ -38,6 +38,12 @@ export default function SignIn() {
   const handlePort = e => {
     setPort(Number(e.target.value));
   };
+  const handleStart = _ => {
+    //ipcRenderer.sendSync("synchronous-message", "start");
+  };
+  const handleStop = _ => {
+    //ipcRenderer.sendSync("synchronous-message", "stop");
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -92,6 +98,7 @@ export default function SignIn() {
               variant="contained"
               color="secondary"
               className={classes.submit}
+              onClick={handleStop}
             >
               Stop
             </Button>
@@ -103,6 +110,7 @@ export default function SignIn() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={handleStart}
             >
               Start
             </Button>
