@@ -13,7 +13,7 @@ const BrowserWindow = electron.BrowserWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 680,
-    height: 420,
+    height: 680,
     webPreferences: {
       nodeIntegration: true
     }
