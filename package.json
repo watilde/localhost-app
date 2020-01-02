@@ -2,10 +2,13 @@
   "name": "localhost-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "main": "public/electron.js",
   "dependencies": {
     "@material-ui/core": "^4.8.2",
     "@material-ui/icons": "^4.5.1",
+    "@rescripts/cli": "0.0.13",
+    "@rescripts/rescript-env": "0.0.11",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -15,11 +18,14 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "rescripts start",
+    "build": "rescripts build",
+    "test": "rescripts test",
     "eject": "react-scripts eject",
-    "start:app": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
+    "start:app": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "build -mw"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,5 +47,25 @@
     "electron": "^7.1.7",
     "electron-builder": "^21.2.0",
     "wait-on": "^3.3.0"
+  },
+  "author": {
+    "name": "Daijiro Wachi",
+    "email": "daijiro.wachi@gmail.com",
+    "url": "https://watilde.com"
+  },
+  "build": {
+    "appId": "com.watilde.localhost",
+    "productName": "Localhost",
+    "copyright": "Copyright © 2020 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
   }
 }

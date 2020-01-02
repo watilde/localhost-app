@@ -12,6 +12,7 @@ import WifiIcon from "@material-ui/icons/Wifi";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
+const ipcRenderer = require("electron").ipcRenderer;
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -29,20 +30,50 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  file: {
+    display: "none"
+  },
+  path: {
+    width: "calc(100% - 2px)",
+    margin: "13px auto",
+    padding: "13px 10px",
+    borderRadius: "4px",
+    border: "1px solid #c0c0c0"
   }
 }));
 
-export default function SignIn() {
+export default function App() {
   const classes = useStyles();
+  const [directory, setDirectory] = useState(null);
   const [port, setPort] = useState(3000);
   const handlePort = e => {
+    if (!e.target.value) return;
     setPort(Number(e.target.value));
   };
+  const handleRoot = e => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const path = e.target.files[0].path;
+    const name = e.target.files[0].name;
+    const re = new RegExp(`/${name}$`);
+    const directory = path.replace(re, "");
+    setDirectory(directory);
+  };
   const handleStart = _ => {
-    //ipcRenderer.sendSync("synchronous-message", "start");
+    ipcRenderer.send("synchronous-message", {
+      event: "start",
+      port: port,
+      directory: directory
+    });
   };
   const handleStop = _ => {
-    //ipcRenderer.sendSync("synchronous-message", "stop");
+    ipcRenderer.send("synchronous-message", {
+      event: "stop"
+    });
+  };
+  const handleFile = e => {
+    e.preventDefault();
+    document.getElementById("directory").click();
   };
 
   return (
@@ -55,20 +86,25 @@ export default function SignIn() {
           localhost.app
         </Typography>
         <form className={classes.form} noValidate>
+          <Grid container spacing={1} className={classes.path}>
+            <Grid item>
+              <button onClick={handleFile}>Choose file</button>
+            </Grid>
+            <Grid item>
+              <div>{directory || "No file chosen"}</div>
+            </Grid>
+          </Grid>
           <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="file"
-            label="Root directory"
+            className={classes.file}
+            id="directory"
+            onChange={handleRoot}
             type="file"
-            name="file"
-            autoFocus
-            InputLabelProps={{
-              shrink: true
+            inputProps={{
+              webkitdirectory: "webkitdirectory",
+              directory: "directory"
             }}
           />
+
           <TextField
             variant="outlined"
             margin="normal"
