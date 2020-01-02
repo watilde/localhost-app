@@ -1,18 +1,19 @@
 const electron = require("electron");
 const { ipcMain } = require("electron");
+const path = require("path");
+const isDev = require("electron-is-dev");
+const http = require("http");
+const handler = require("serve-handler");
 
+let server;
+let mainWindow;
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-const path = require("path");
-const isDev = require("electron-is-dev");
-
-let mainWindow;
-
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 680,
+    width: 680,
+    height: 420,
     webPreferences: {
       nodeIntegration: true
     }
@@ -31,7 +32,16 @@ function createWindow() {
 }
 
 ipcMain.on("synchronous-message", (event, arg) => {
-  console.log(arg);
+  if (arg.event === "start") {
+    server = http.createServer((request, response) => {
+      return handler(request, response, { public: arg.directory });
+    });
+    server.listen(arg.port, () => {
+      console.log(`Running at http://localhost:${arg.port}`);
+    });
+  } else if (arg.event === "stop") {
+    server.close();
+  }
 });
 
 app.on("ready", createWindow);
