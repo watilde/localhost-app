@@ -26,8 +26,8 @@
     "eject": "react-scripts eject",
     "start:server": "rescripts start",
     "postinstall": "electron-builder install-app-deps",
-    "preelectron-pack": "yarn build",
-    "electron-pack": "build -mw"
+    "preelectron-pack": "npm run build",
+    "electron-pack": "electron-builder build -mw"
   },
   "eslintConfig": {
     "extends": "react-app"
