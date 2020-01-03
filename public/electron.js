@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { ipcMain } = require("electron");
+const { ipcMain, BrowserWindow } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 const http = require("http");
@@ -8,7 +8,6 @@ const handler = require("serve-handler");
 let server;
 let mainWindow;
 const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({

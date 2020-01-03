@@ -1,5 +1,6 @@
 {
   "name": "localhost-app",
+  "description": "Simple file server app",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -58,14 +59,21 @@
     "productName": "localhost",
     "copyright": "Copyright © 2020 ${author}",
     "mac": {
+      "icon": "public/logo512.png",
       "category": "public.app-category.utilities"
     },
+    "win": {
+      "icon": "public/logo512.png"
+    },
     "files": [
+      "dist/**/*",
+      "public/**/*",
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "*.js"
     ],
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "public"
     }
   }
 }
