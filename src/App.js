@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function App() {
   const classes = useStyles();
+  const [isServerRun, setIsServerRun] = useState(false);
   const [directory, setDirectory] = useState(null);
   const [port, setPort] = useState(3000);
   const handlePort = e => {
@@ -60,14 +61,14 @@ export default function App() {
     setDirectory(directory);
   };
   const handleStart = _ => {
-    ipcRenderer.send("synchronous-message", {
+    ipcRenderer.send("asynchronous-message", {
       event: "start",
       port: port,
       directory: directory
     });
   };
   const handleStop = _ => {
-    ipcRenderer.send("synchronous-message", {
+    ipcRenderer.send("asynchronous-message", {
       event: "stop"
     });
   };
@@ -75,6 +76,15 @@ export default function App() {
     e.preventDefault();
     document.getElementById("directory").click();
   };
+
+  ipcRenderer.on("message", (event, arg) => {
+    if (arg.event === "start") {
+      setIsServerRun(true);
+    } else if (arg.event === "stop") {
+      setIsServerRun(false);
+    }
+    console.log(arg);
+  });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -85,13 +95,13 @@ export default function App() {
         <Typography component="h1" variant="h5">
           localhost.app
         </Typography>
-        <form className={classes.form} noValidate>
+        <div className={classes.form}>
           <Grid container spacing={1} className={classes.path}>
             <Grid item>
-              <button onClick={handleFile}>Choose file</button>
+              <button onClick={handleFile}>Choose directory</button>
             </Grid>
             <Grid item>
-              <div>{directory || "No file chosen"}</div>
+              <div>{directory || "No directory chosen"}</div>
             </Grid>
           </Grid>
           <TextField
@@ -108,7 +118,6 @@ export default function App() {
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             name="port"
             label="Port"
@@ -125,7 +134,7 @@ export default function App() {
               step: "1"
             }}
           />
-        </form>
+        </div>
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <Button
@@ -135,6 +144,7 @@ export default function App() {
               color="secondary"
               className={classes.submit}
               onClick={handleStop}
+              disabled={!isServerRun}
             >
               Stop
             </Button>
@@ -147,6 +157,7 @@ export default function App() {
               color="primary"
               className={classes.submit}
               onClick={handleStart}
+              disabled={isServerRun || !port || !directory}
             >
               Start
             </Button>

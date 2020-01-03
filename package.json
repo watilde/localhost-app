@@ -12,7 +12,6 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
-    "electron": "^7.1.7",
     "electron-is-dev": "^1.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -20,14 +19,13 @@
     "serve-handler": "^6.1.2"
   },
   "scripts": {
-    "start": "concurrently \"BROWSER=none npm run start:server\" \"wait-on http://localhost:3000 && electron .\"",
-    "build": "rescripts build",
+    "build": "electron-builder build -mw",
+    "start": "concurrently \"BROWSER=none npm run start:react\" \"wait-on http://localhost:3000 && electron .\"",
     "test": "rescripts test",
     "eject": "react-scripts eject",
-    "start:server": "rescripts start",
+    "start:react": "rescripts start",
     "postinstall": "electron-builder install-app-deps",
-    "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder build -mw"
+    "prebuild": "rescripts build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,6 +44,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.0.2",
+    "electron": "^7.1.7",
     "electron-builder": "^21.2.0",
     "wait-on": "^3.3.0"
   },

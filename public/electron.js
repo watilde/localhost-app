@@ -31,16 +31,19 @@ function createWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
 }
 
-ipcMain.on("synchronous-message", (event, arg) => {
+ipcMain.on("asynchronous-message", (event, arg) => {
   if (arg.event === "start") {
     server = http.createServer((request, response) => {
       return handler(request, response, { public: arg.directory });
     });
     server.listen(arg.port, () => {
       console.log(`Running at http://localhost:${arg.port}`);
+      event.reply("message", { event: "start" });
     });
   } else if (arg.event === "stop") {
     server.close();
+    console.log("Server closed");
+    event.reply("message", { event: "stop" });
   }
 });
 
