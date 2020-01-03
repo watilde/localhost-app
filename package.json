@@ -55,7 +55,7 @@
   },
   "build": {
     "appId": "com.watilde.localhost",
-    "productName": "Localhost",
+    "productName": "localhost",
     "copyright": "Copyright © 2020 ${author}",
     "mac": {
       "category": "public.app-category.utilities"
