@@ -4,6 +4,7 @@ const path = require("path");
 const isDev = require("electron-is-dev");
 const http = require("http");
 const handler = require("serve-handler");
+const logger = require("pino")();
 
 let server;
 let mainWindow;
@@ -36,12 +37,12 @@ ipcMain.on("asynchronous-message", (event, arg) => {
       return handler(request, response, { public: arg.directory });
     });
     server.listen(arg.port, () => {
-      console.log(`Running at http://localhost:${arg.port}`);
+      logger.info(`Running at http://localhost:${arg.port}`);
       event.reply("message", { event: "start" });
     });
   } else if (arg.event === "stop") {
     server.close();
-    console.log("Server closed");
+    logger.info("Server closed");
     event.reply("message", { event: "stop" });
   }
 });
